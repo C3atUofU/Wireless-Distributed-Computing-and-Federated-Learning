@@ -1,0 +1,57 @@
+math - built-in library that provides access to common math functions and constants
+
+numpy - fundamental package for scientific computing, contains n-dimentional arrays and matricies with high-level math functions to operate on aforementioned arrays 
+
+tensorflow - symbolic math library for dataflow and differentiable programming, used for machine learning/neural networks
+
+keras - minimalist library for developing deep learning models
+
+warnings - non-fatal alerts
+
+matplotlib - plotting library that provides an object-oriented API for embedding plots into applications
+
+matplotlib.pyplot - collection of command style functions that make matplotlib work like MATLAB
+
+pandas - data analysis and manipulation tool
+
+PIL - aka Pillow, the python imaging library
+
+requests - HTTP library
+
+io - deals with various types of I/O, three main types (text, binary, raw)
+
+sklearn.model_selection - 
+
+scikit-learn - machine learning 
+
+sklearn.model_selection train_test_split - splits arrays or matricies into random train and test subjects
+
+io BytesIO - expects bytes-like objects and produces bytes objects
+
+PIL Image - provides a class with the same name which is used to represent a PIL image
+
+os - miscellaneous operating system interfaces, allows you to interface with the underlying os (Windows, Mac, or Linux)
+
+random - generates pseudo-random numbers
+
+keras applications - provides model definitions and pre-trained weights for popular architechures (VGG16, ResNet50, etc.)
+
+keras Model - function API, given some input tensor(s) and output tensor(s), you can instantiate a model that will include all layers
+
+keras.models Sequential - linear stack of layers
+
+keras.layers - flattened list of layers comprising the model
+
+keras.layers Dropout - a technique used to prevent a model from overfitting, works bu randomly setting the outgoing edges of hidden units (neurons that make up hidden layers) to 0 at each update of the training phase
+
+keras.layers Flatten - reshapes the tensor to have the shape that is equal to the number of elements contained in tensor not including the batch dimension, in other words, it flattens the iput and does not affect batch size
+
+keras.layers Dense - applies weights to all nodes from the previous layer
+
+keras.layers BatchNormalization - normalizes the layer inputs on a per-feature basis
+
+keras.utils.np_utils - numpy related utilities
+
+keras.utils.np_utils to_categorical - used to convert class vector to binary class matrix
+
+glob - finds path names matching a specified pattern, able to manipulate directories and sub-directories
