@@ -10,11 +10,7 @@ import socket
 import pickle
 import numpy as np
 import types
-import time
-import aggr_client_v1_3 as aggr_client
 isImported=True
-node_recvd = []
-recv_time = 0
 '''
 	This allows the aggregator to receive messages from all N nodes.
 	Once called it will sit untill all messages are received
@@ -26,14 +22,14 @@ def aggr_server(host,n):
     global N, keep_running, sel, numconn, result
     N = n
     #num = num_con # number of nodes to listen for
-    numconn = 0  # number times has been connected to and received a vector
+    numconn = 0 # number times has been connected to and recieved a vector
     sel = selectors.DefaultSelector()
     keep_running = True
     
-    w = np.zeros((N, 784))
+    w = np.zeros((N,784))
     #w = []
     fn = []
-    result = types.SimpleNamespace(w=w, fn=fn)
+    result = types.SimpleNamespace(w=w,fn=fn)
     host = host
     port = 65432
     
@@ -51,26 +47,20 @@ def aggr_server(host,n):
     while keep_running:
         event = sel.select()
         for key, mask in event:
-            callback = key.data  # .data = accept() or read()
+            callback = key.data # .data = accept() or read()
             #print(callback)
-            callback(key.fileobj, mask)  # .fileobj is socket,
-        if not(recv_time == 0) and (time.time() > recv_time + 1.5):  # triggers resend protocol after 1.5s
-            for i in range(0, len(node_recvd)):
-                aggr_client.client(node_recvd[i], 'resend')
+            callback(key.fileobj, mask) # .fileobj is socket, 
      
     sel.close()
     
     return result
 
 
-def accept(sock, mask):
-    global recv_time, node_recvd
-    recv_time = time.time()
+def accept(sock, mask): 
     conn, addr = sock.accept()  # Should be ready
-    node_recvd.append(addr[1])
     #print('accepted connection from', addr)
     conn.setblocking(1)
-    sel.register(conn, selectors.EVENT_READ, read)  # call read
+    sel.register(conn, selectors.EVENT_READ, read) # call read
 
 def read(conn, mask):
     global keep_running, numconn, result
@@ -94,9 +84,9 @@ def read(conn, mask):
         keep_running = False
  
 if not isImported:
-    host = '192.168.0.105' # aggregator ip
-    num_con =  5 # number nodes to collect from
-    result = aggr_server(host, num_con)
+    host = '192.168.0.103' # aggregator ip
+    num_con =  2 # number nodes to collect from 
+    result = aggr_server(host,num_con)
     ##print(w)    
 
 

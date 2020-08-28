@@ -11,7 +11,7 @@ import time
 
 
 def send(node, stage, data):
-    print("sending")
+    print("sending no rest ")
     if stage == 1:
         ip_switcher = {
             1: '224.3.29.71',
@@ -57,7 +57,7 @@ def send(node, stage, data):
         for i in range(pcs):
             head = i.to_bytes(4, 'big')
             sock.sendto(head + datasend[i*buff:(i+1)*buff], (MCAST_GRP, MCAST_PORT))
-            time.sleep(0.01) #gives socket time to recv
+            # time.sleep(0.01) #gives socket time to recv
         head = pcs.to_bytes(4, 'big')
         sock.sendto(head + datasend[pcs*buff:datasend.__len__()], (MCAST_GRP, MCAST_PORT))
     else:

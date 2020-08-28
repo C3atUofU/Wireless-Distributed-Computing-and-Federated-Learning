@@ -67,16 +67,16 @@ def m_recv(node, stage, q, priority, point_size=785):
         while True:
             part = sock.recv(buff)
             head = int.from_bytes(part[0:4], 'big')
-            #sys.stdout.write('\rReceiving '+load_symbols[head % 3])
-            #sys.stdout.flush()
+            sys.stdout.write('\rReceiving '+load_symbols[head % 3])
+            sys.stdout.flush()
             recv_q.put((head, part[4:])) # use of priority queue to sort out of order data-grams
             if len(part) < buff:
                 break
         qsize = recv_q.qsize()
         while not recv_q.empty():
             a = recv_q.get()
-            #sys.stdout.write('\rQueuing Data ' + str(int(100*a[0]/qsize)) + '%')
-            #sys.stdout.flush()
+            sys.stdout.write('\rQueuing Data ' + str(int(100*a[0]/qsize)) + '%')
+            sys.stdout.flush()
             recvd = recvd + a[1]
         data_recvd = np.frombuffer(recvd, dtype='uint8')
         loss = len(data_recvd) % point_size

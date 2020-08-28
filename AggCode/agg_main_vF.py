@@ -16,7 +16,7 @@ import time
 import matplotlib.pyplot as plt
 
 '''
-    The main of the system. It will initialize conditions and detect available nodes and 
+    The run of the system. It will initialize conditions and detect available nodes and 
     assumes that all devices connected to the router are ready to act as a node.
     Then it will enter a loop to perform K global updates.
     It will send a data packet to each node
@@ -27,7 +27,15 @@ import matplotlib.pyplot as plt
 '''
 
 
-def run(K=5, tau=0, avc=0, d=4, shuff=2, pad_value=1, graph=False):
+def run(K=5, tau=10, avc=0, d=4, shuff=2, pad_value=1, graph=False):
+    # K = global iterations
+    # tau = local iterations
+    # avc = w vector processing (see line 84)
+    # d = number of data points per node (must be a multiple of 4 for coded multicast)
+    # shuff = number of data shuffles per global iteration, (performs tau iterations after each shuffle)
+    # pad_value = pads training data sent by a factor of pad_value, for testing purposes
+    # graph = boolean to display loss function graph after completing training cycle
+
     router_ip = '192.168.0.1'
     not5 = True
     while not5:
@@ -90,6 +98,7 @@ def run(K=5, tau=0, avc=0, d=4, shuff=2, pad_value=1, graph=False):
         accs[k] = AccTest.AccTest(w)
     tfin = time.time()
     t_total = tfin-tinit
+
     # Graph the loss functions
     if graph:
         plt.plot(fnfn)
@@ -99,38 +108,43 @@ def run(K=5, tau=0, avc=0, d=4, shuff=2, pad_value=1, graph=False):
     return t_total
 
 
-# this is the limits test
-dt = list(range(1, 21, 1))
+""" this is the limits test it runs the main loop multiple times changing the input parameters each iteration. 
+Also available is the ability run each input point multiple times and take an average. After running over the input
+parameters stored in dt. the application then pauses and asks for the user to press enter. this is to allow the user
+to change the running application on each node, and then rerun the test for the other application. After the loop is
+finished the time values of each application is stored and plotted.
+"""
+dt = list(range(1, 10, 1))  # range(start_incl, end_excl, increment)
+# dt.reverse()  # allows to run the test from highest to lowest values
 time_u = np.zeros(shape=(len(dt)))
 time_m = np.zeros(shape=(len(dt)))
 for i in range(len(dt)):
     times = 0.0
-    for j in range(1):
-        print('unicast running... ', dt[i], ' X data padding, ', j+1, ' of 1 iterations')
-        tim = run(pad_value=dt[i])
+    for j in range(1):  # change in range value to take an average time value
+        print('App 1 running... ', dt[i], ' X data padding, ', j + 1, ' of 1 iterations')
+        tim = run(pad_value=dt[i])  # change input parameter for different limits tests
         times = times + tim
-    time_u[i] = times/1
+    time_u[i] = times / 1  # change denominator for averaging
     print(time_u[i], ' seconds')
-print('unicast times are ', time_u)
+    time.sleep(30.0)
+print('App 1 times are ', time_u)
 input('please press enter to continue:')
 
 for i in range(len(dt)):
     times = 0.0
     for j in range(1):
-        print('multicast running... ', dt[i], ' X data padding, ', j+1, ' of 1 iterations')
+        print('App 2 running... ', dt[i], ' X data padding, ', j + 1, ' of 1 iterations')
         tim = run(pad_value=dt[i])
         times = times + tim
-    time_m[i] = times/1
+    time_m[i] = times / 1
     print(time_m[i], ' seconds')
-print('multicast times are ', time_m)
+    time.sleep(30.0)
+print('App 2 times are ', time_m)
 plot_times = np.array([time_u, time_m]).T
 plot_data_pts = np.array(dt)
 plt.plot(plot_data_pts, plot_times)
-plt.title('Average training times for Unicast vs Multicast')
-plt.legend(('Unicast', 'Multicast'))
+plt.title('Average training times for App 1 vs App 2')
+plt.legend(('App 1', 'App 2'))
 plt.xlabel('Data Padding Factor')
 plt.ylabel('Completion Time (seconds)')
 plt.show()
-
-
-
